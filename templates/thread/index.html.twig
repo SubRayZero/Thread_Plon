@@ -13,27 +13,20 @@
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav">
 						<li class="nav-item">
-							<a class="nav-link" href="/home">Home</a>
+							<a class="nav-link" href="/home">Thread</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 	</header>
-	<h1>Register</h1>
-
-	{{ form_errors(registrationForm) }}
-
-	{{ form_start(registrationForm) }}
-	{{ form_row(registrationForm.username) }}
-	{{ form_row(registrationForm.created_at) }}
-	{{ form_row(registrationForm.update_at) }}
-	{{ form_row(registrationForm.email) }}
-	{{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-	{{ form_row(registrationForm.agreeTerms) }}
-
-	<button type="submit" class="btn btn-primary">Register</button>
-	{{ form_end(registrationForm) }}
+	<h1>New Thread</h1>
+		{{ form_start(threadForm) }}
+		{{ form_errors(threadForm.title) }}
+		{{ form_errors(threadForm.description) }}
+		{{ form_errors(threadForm.body) }}
+		{{ form_row(threadForm.created_at) }}
+		{{ form_row(threadForm.updated_at) }}
+		<button type="submit" class="btn btn-primary">Validation</button>
+	{{ form_end(threadForm) }}
 {% endblock %}
