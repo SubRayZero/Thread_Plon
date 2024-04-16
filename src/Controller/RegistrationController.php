@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\AuthentificationUserAuthenticator;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -31,6 +33,8 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $user->setCreatedAt(new DateTimeImmutable());
+            $user->setUpdateAt(new DateTime());
             $entityManager->persist($user);
             $entityManager->flush();
 

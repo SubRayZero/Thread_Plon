@@ -6,6 +6,7 @@ use App\Entity\Thread;
 use App\Form\ThreadFormType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,15 +14,53 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ThreadController extends AbstractController
 {
-    #[Route('/thread', name: 'app_thread')]
+    #[Route('/thread/create', name: 'app_thread_create')]
 
-    public function thread(Request $request): Response
+    public function createThread(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $thread = new Thread();
-        $form = $this->createForm(ThreadFormType::class, $thread);
+        $createThread = new Thread();
+        $form = $this->createForm(ThreadFormType::class, $createThread);
         $form->handleRequest($request);
 
-        return $this->render('thread/index.html.twig', [
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $createThread->setCreatedAt(new date);
+            $createThread->setUpdatedAt(new DateTime());
+
+            $entityManager->persist($createThread);
+            $entityManager->flush();
+        }
+
+
+
+        return $this->render('thread/create.html.twig', [
+            'threadForm' => $form,
+        ]);
+    }
+
+    #[Route('/thread/{id}/edit', name: 'app_thread_create')]
+
+    public function editThread($id, EntityManagerInterface $entityManager, Request $request): Response
+    {
+
+        $threadRepository = $entityManager->getRepository(Thread::class);
+        $threadEdit = $threadRepository->find($id);
+
+        $form = $this->createForm(ThreadFormType::class, $threadEdit);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $threadEdit->setCreatedAt(new date);
+            $threadEdit->setUpdatedAt(new DateTime());
+
+            $entityManager->persist($threadEdit);
+            $entityManager->flush();
+        }
+
+
+
+        return $this->render('thread/edit.html.twig', [
             'threadForm' => $form,
         ]);
     }
@@ -37,7 +76,7 @@ class ThreadController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             //'controller_name'=> 'ThreadController',
-            'threads'=> $threads
+            'threads' => $threads
         ]);
     }
 
@@ -53,8 +92,8 @@ class ThreadController extends AbstractController
 
 
         return $this->render('thread/details.html.twig', [
-            'controller_name'=> 'ThreadController',
-            'thread'=> $thread
+            'controller_name' => 'ThreadController',
+            'thread' => $thread
         ]);
     }
 }
