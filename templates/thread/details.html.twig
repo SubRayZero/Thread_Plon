@@ -27,9 +27,7 @@
 		</nav>
 	</header>
 
-	{% for thread in threads %}
-		<a href="{{ path('app_home_details', {'id': thread.id}) }}">{{thread.title}}</a>
-	{% endfor %}
+    	<p>{{thread.title}}</p>
 
 
 {% endblock %}
