@@ -20,18 +20,39 @@
 			</div>
 		</nav>
 	</header>
-	<h1>Register</h1>
-
-	{{ form_errors(registrationForm) }}
 
 	{{ form_start(registrationForm) }}
-	{{ form_row(registrationForm.username) }}
-	{{ form_row(registrationForm.email) }}
-	{{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-	{{ form_row(registrationForm.agreeTerms) }}
+	{{ form_errors(registrationForm) }}
+	<div class="container">
+		<div class="example-wrapper">
+			<h1>Register</h1>
+			<div class="mb-3">
+				{{ form_errors(registrationForm.username) }}
+				<label for="exampleInputText1" class="form-label">Username</label>
+				{{ form_widget(registrationForm.username, {'attr': {'class': 'form-control', 'id': 'exampleInputText1'}}) }}
+			</div>
+			<div class="mb-3">
+				{{ form_errors(registrationForm.email) }}
+				<label for="exampleInputEmail1" class="form-label">Email address</label>
+				{{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'id': 'exampleInputEmail1', 'aria-describedby': 'emailHelp'}}) }}
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputPassword1" class="form-label">Password</label>
+				{{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'id': 'exampleInputPassword1'}}) }}
+				{% if registrationForm.plainPassword.vars.errors|length > 0 %}
+					{% for error in registrationForm.plainPassword.vars.errors %}
+						<div class="alert alert-danger">{{ error.message }}</div>
+					{% endfor %}
+				{% endif %}
+			</div>
 
-	<button type="submit" class="btn btn-primary">Register</button>
+			<div class="mb-3 form-check">
+				{{ form_widget(registrationForm.agreeTerms, {'id': 'exampleCheck1', 'class': 'form-check-input'}) }}
+				<label class="form-check-label" for="exampleCheck1">Agree Terms</label>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Register</button>
+		</div>
+	</div>
 	{{ form_end(registrationForm) }}
 {% endblock %}

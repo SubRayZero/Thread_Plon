@@ -25,6 +25,9 @@
 							<a class="nav-link" href="/home">Home</a>
 						</li>
 						<li class="nav-item">
+							<a class="nav-link" href="/thread/create">New thread</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
 						</li>
 					</ul>
@@ -38,9 +41,8 @@
 			<div class="mb-3">
 				Hello
 				{{ app.user.userIdentifier }},
-
 			</div>
-            
+
 		{% endif %}
 	</div>
 {% endblock %}

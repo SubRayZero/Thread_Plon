@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -42,6 +44,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $username = null;
+
+    /**
+     * @var Collection<int, Thread>
+     */
+    #[ORM\OneToMany(targetEntity: Thread::class, mappedBy: 'user')]
+    private Collection $thread_id;
+
+    public function __construct()
+    {
+        $this->thread_id = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -153,4 +166,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Thread>
+     */
+    public function getThreadId(): Collection
+    {
+        return $this->thread_id;
+    }
+
+    public function addThreadId(Thread $threadId): static
+    {
+        if (!$this->thread_id->contains($threadId)) {
+            $this->thread_id->add($threadId);
+            $threadId->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeThreadId(Thread $threadId): static
+    {
+        if ($this->thread_id->removeElement($threadId)) {
+            // set the owning side to null (unless already changed)
+            if ($threadId->getUser() === $this) {
+                $threadId->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

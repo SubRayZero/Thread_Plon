@@ -26,10 +26,14 @@ class ThreadController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $user = $this->getUser();
+            if ($user) {
+                $createThread->setUser($user);
+            }
+
             $createThread->setCreatedAt(new DateTimeImmutable());
             $createThread->setUpdatedAt(new DateTime());
             $createThread->setStatus('active');
-
             $entityManager->persist($createThread);
             $entityManager->flush();
         }

@@ -40,6 +40,9 @@ class Thread
     #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'category')]
     private Collection $category;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'thread_id')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
@@ -152,4 +155,15 @@ class Thread
         return $this;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }
