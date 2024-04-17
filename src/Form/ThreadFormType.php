@@ -18,18 +18,12 @@ class ThreadFormType extends AbstractType
             ->add('title')
             ->add('description')
             ->add('body')
-            ->add('body')
-            ->add(
-                'category',
-                EntityType::class,
-                [
-                    'class' => Category::class,
-                    'choice_label' => 'title',
-                    'multiple' => true,
-                    'expanded' => true
-                ]
-
-            );
+            ->add('category_id', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'expanded' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

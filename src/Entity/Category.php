@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,8 +28,16 @@ class Category
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'category')]
-    private ?Thread $categoru = null;
+    /**
+     * @var Collection<int, Thread>
+     */
+    #[ORM\ManyToMany(targetEntity: Thread::class, mappedBy: 'category_id')]
+    private Collection $threads;
+
+    public function __construct()
+    {
+        $this->threads = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -82,15 +92,31 @@ class Category
         return $this;
     }
 
-    public function getCategoru(): ?Thread
+    /**
+     * @return Collection<int, Thread>
+     */
+    public function getThreads(): Collection
     {
-        return $this->categoru;
+        return $this->threads;
     }
 
-    public function setCategoru(?Thread $categoru): static
+    public function addThread(Thread $thread): static
     {
-        $this->categoru = $categoru;
+        if (!$this->threads->contains($thread)) {
+            $this->threads->add($thread);
+            $thread->addCategoryId($this);
+        }
 
         return $this;
     }
+
+    public function removeThread(Thread $thread): static
+    {
+        if ($this->threads->removeElement($thread)) {
+            $thread->removeCategoryId($this);
+        }
+
+        return $this;
+    }
+
 }

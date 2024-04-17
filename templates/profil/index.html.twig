@@ -43,6 +43,32 @@
 				{{ app.user.userIdentifier }},
 			</div>
 
+			<div class="mb-3">
+				Your threads
+			</div>
+			{% if threadsUser is not empty %}
+				<ul>
+					{% for thread in threadsUser %}
+						<div class="container">
+							<div class="card">
+								<h5 class="card-header">{{ thread.CreatedAt | date("m/d/y")}}</h5>
+								<div class="card-body">
+									<h5 class="card-title">
+										{{thread.title}}
+									</h5>
+									<p class="card-text">{{thread.description}}</p>
+									<a class="btn btn-primary" href="{{ path('app_home_details', {'id': thread.id}) }}">Show Details</a>
+									<a class="btn btn-primary" href="{{ path('app_thread_edit', {'id': thread.id}) }}">Modify</a>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p>No threads found for the current user.</p>
+			{% endif %}
 		{% endif %}
+
+
 	</div>
 {% endblock %}

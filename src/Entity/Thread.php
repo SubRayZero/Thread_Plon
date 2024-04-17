@@ -34,18 +34,18 @@ class Thread
     #[ORM\Column(length: 100)]
     private ?string $status = null;
 
-    /**
-     * @var Collection<int, Category>
-     */
-    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'category')]
-    private Collection $category;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'thread_id')]
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, Category>
+     */
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'threads')]
+    private Collection $category_id;
+
     public function __construct()
     {
-        $this->category = new ArrayCollection();
+        $this->category_id = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,36 +125,6 @@ class Thread
         return $this;
     }
 
-    /**
-     * @return Collection<int, Category>
-     */
-    public function getCategory(): Collection
-    {
-        return $this->category;
-    }
-
-    public function addCategory(Category $category): static
-    {
-        if (!$this->category->contains($category)) {
-            $this->category->add($category);
-            $category->setCategoru($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): static
-    {
-        if ($this->category->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getCategoru() === $this) {
-                $category->setCategoru(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -163,6 +133,30 @@ class Thread
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategoryId(): Collection
+    {
+        return $this->category_id;
+    }
+
+    public function addCategoryId(Category $categoryId): static
+    {
+        if (!$this->category_id->contains($categoryId)) {
+            $this->category_id->add($categoryId);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryId(Category $categoryId): static
+    {
+        $this->category_id->removeElement($categoryId);
 
         return $this;
     }

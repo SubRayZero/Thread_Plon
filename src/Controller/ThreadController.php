@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Thread;
 use App\Form\ThreadFormType;
 use DateTime;
@@ -23,6 +24,15 @@ class ThreadController extends AbstractController
         $createThread = new Thread();
         $form = $this->createForm(ThreadFormType::class, $createThread);
         $form->handleRequest($request);
+
+       /* $category_id = $entityManager->getRepository(Category::class)->findAll();
+
+        $categoryChoices = [];
+        foreach ($category_id as $category) {
+            $categoryChoices[$category->getTitle()] = $category->getId();
+        }
+
+        $form->get('category_id');*/
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -56,6 +66,11 @@ class ThreadController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $user = $this->getUser();
+            if ($user) {
+                $threadEdit->setUser($user);
+            }
+
             $threadEdit->setCreatedAt(new DateTimeImmutable());
             $threadEdit->setUpdatedAt(new DateTime());
             $threadEdit->setStatus('active');
@@ -65,7 +80,8 @@ class ThreadController extends AbstractController
         }
 
         return $this->render('thread/edit.html.twig', [
-            'threadEdit' => $form,
+            'category' => $threadEdit->getCategory(),
+            'threadEdit' => $threadEdit,
         ]);
     }
 
@@ -98,6 +114,18 @@ class ThreadController extends AbstractController
         return $this->render('thread/details.html.twig', [
             'controller_name' => 'ThreadController',
             'thread' => $thread
+        ]);
+    }
+
+    #[Route('/profil', name: 'app_profil_thread')]
+    public function threadAllByUser(EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        $threadRepository = $entityManager->getRepository(Thread::class);
+        $threadsUser = $threadRepository->findBy(['user' => $user]);
+
+        return $this->render('profil/index.html.twig', [
+            'threadsUser' => $threadsUser
         ]);
     }
 }
