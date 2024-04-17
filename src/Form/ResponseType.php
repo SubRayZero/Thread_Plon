@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Response;
+use App\Entity\ResponseEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,20 +12,13 @@ class ResponseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('body')
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('update_at', null, [
-                'widget' => 'single_text',
-            ])
-        ;
+            ->add('body');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Response::class,
+            'data_class' => ResponseEntity::class,
         ]);
     }
 }

@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ProfilController extends AbstractController
 {
-   /* #[Route('/profil', name: 'app_profil')]
+  /* #[Route('/profil', name: 'app_profil')]
     public function profilAll(EntityManagerInterface $entityManager)
     {
 

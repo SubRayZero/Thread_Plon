@@ -7,7 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ResponseRepository::class)]
-class Response
+class ResponseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +22,9 @@ class Response
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $update_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'response_id')]
+    private ?Thread $thread = null;
 
     public function getId(): ?int
     {
@@ -60,6 +63,18 @@ class Response
     public function setUpdateAt(\DateTimeInterface $update_at): static
     {
         $this->update_at = $update_at;
+
+        return $this;
+    }
+
+    public function getThread(): ?Thread
+    {
+        return $this->thread;
+    }
+
+    public function setThread(?Thread $thread): static
+    {
+        $this->thread = $thread;
 
         return $this;
     }

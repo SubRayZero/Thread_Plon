@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Thread;
+use App\Entity\ResponseEntity;
+use App\Form\ResponseType;
 use App\Form\ThreadFormType;
 use DateTime;
 use DateTimeImmutable;
@@ -24,15 +26,6 @@ class ThreadController extends AbstractController
         $createThread = new Thread();
         $form = $this->createForm(ThreadFormType::class, $createThread);
         $form->handleRequest($request);
-
-       /* $category_id = $entityManager->getRepository(Category::class)->findAll();
-
-        $categoryChoices = [];
-        foreach ($category_id as $category) {
-            $categoryChoices[$category->getTitle()] = $category->getId();
-        }
-
-        $form->get('category_id');*/
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -77,11 +70,12 @@ class ThreadController extends AbstractController
 
             $entityManager->persist($threadEdit);
             $entityManager->flush();
+
+            return $this->redirectToRoute('app_profil_thread');
         }
 
         return $this->render('thread/edit.html.twig', [
-            'category' => $threadEdit->getCategory(),
-            'threadEdit' => $threadEdit,
+            'form' => $form,
         ]);
     }
 
@@ -95,28 +89,40 @@ class ThreadController extends AbstractController
 
 
         return $this->render('home/index.html.twig', [
-            //'controller_name'=> 'ThreadController',
+            'controller_name' => 'ThreadController',
             'threads' => $threads
         ]);
     }
 
-
-
     #[Route('/home/{id}', name: 'app_home_details')]
 
-    public function threadHome($id, EntityManagerInterface $entityManager)
+    public function threadHome($id, EntityManagerInterface $entityManager, Request $request)
     {
-
         $threadRepository = $entityManager->getRepository(Thread::class);
         $thread = $threadRepository->find($id);
 
+        $response = new ResponseEntity();
+        $form = $this->createForm(ResponseType::class, $response);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $response->setThread($thread);
+
+            $response->setCreatedAt(new DateTimeImmutable());
+            $response->setUpdateAt(new DateTime());
+
+            $entityManager->persist($response);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_home_details', ['id' => $id]);
+        }
 
         return $this->render('thread/details.html.twig', [
             'controller_name' => 'ThreadController',
-            'thread' => $thread
+            'thread' => $thread,
+            'form' => $form->createView(),
         ]);
     }
-
     #[Route('/profil', name: 'app_profil_thread')]
     public function threadAllByUser(EntityManagerInterface $entityManager)
     {

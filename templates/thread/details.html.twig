@@ -42,4 +42,19 @@
 	</div>
 
 
+
+
+	{{ form_start(form) }}
+	<div class="container">
+		<div class="example-wrapper">
+			<div class="mb-3">
+				{{ form_errors(form.body) }}
+				<label for="exampleFormControlTextarea1" class="form-label">Response</label>
+				{{ form_widget(form.body, {'attr':{'class': 'form-control', 'id': 'exampleFormControlTextarea1', 'rows' : '3'}}
+				)}}
+			</div>
+			<button type="submit" class="btn btn-primary">Send your response</button>
+		</div>
+	</div>
+	{{ form_end(form) }}
 {% endblock %}

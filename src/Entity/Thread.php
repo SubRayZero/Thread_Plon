@@ -43,9 +43,16 @@ class Thread
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'threads')]
     private Collection $category_id;
 
+    /**
+     * @var Collection<int, ResponseEntity>
+     */
+    #[ORM\OneToMany(targetEntity: ResponseEntity::class, mappedBy: 'thread')]
+    private Collection $response_id;
+
     public function __construct()
     {
         $this->category_id = new ArrayCollection();
+        $this->response_id = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -157,6 +164,36 @@ class Thread
     public function removeCategoryId(Category $categoryId): static
     {
         $this->category_id->removeElement($categoryId);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ResponseEntity>
+     */
+    public function getResponseId(): Collection
+    {
+        return $this->response_id;
+    }
+
+    public function addResponseId(ResponseEntity $responseId): static
+    {
+        if (!$this->response_id->contains($responseId)) {
+            $this->response_id->add($responseId);
+            $responseId->setThread($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResponseId(ResponseEntity $responseId): static
+    {
+        if ($this->response_id->removeElement($responseId)) {
+            // set the owning side to null (unless already changed)
+            if ($responseId->getThread() === $this) {
+                $responseId->setThread(null);
+            }
+        }
 
         return $this;
     }
