@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Thread;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,13 +17,13 @@ class ThreadFormType extends AbstractType
             ->add('title')
             ->add('description')
             ->add('body')
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updated_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('status')
+            ->add('category', EntityType::class,[
+                'class'=>Category::class,
+                'choice_label'=>'title',
+                'multiple'=>true,
+                'expanded'=>true
+            ]
+            )
         ;
     }
 

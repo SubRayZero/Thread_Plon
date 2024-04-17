@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Thread;
 use App\Form\ThreadFormType;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,21 +26,20 @@ class ThreadController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $createThread->setCreatedAt(new date);
+            $createThread->setCreatedAt(new DateTimeImmutable());
             $createThread->setUpdatedAt(new DateTime());
+            $createThread->setStatus('active');
 
             $entityManager->persist($createThread);
             $entityManager->flush();
         }
-
-
 
         return $this->render('thread/create.html.twig', [
             'threadForm' => $form,
         ]);
     }
 
-    #[Route('/thread/{id}/edit', name: 'app_thread_create')]
+    #[Route('/thread/{id}/edit', name: 'app_thread_edit')]
 
     public function editThread($id, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -51,17 +52,16 @@ class ThreadController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $threadEdit->setCreatedAt(new date);
+            $threadEdit->setCreatedAt(new DateTimeImmutable());
             $threadEdit->setUpdatedAt(new DateTime());
+            $threadEdit->setStatus('active');
 
             $entityManager->persist($threadEdit);
             $entityManager->flush();
         }
 
-
-
         return $this->render('thread/edit.html.twig', [
-            'threadForm' => $form,
+            'threadEdit' => $form,
         ]);
     }
 

@@ -4,6 +4,9 @@
 {% endblock %}
 
 {% block body %}
+
+
+
 	<header>
 		<nav class="navbar navbar-expand-lg bg-body-tertiary">
 			<div class="container-fluid">
@@ -19,17 +22,29 @@
 							<a class="nav-link" href="/login">LogIn</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/thread">Threads</a>
+							<a class="nav-link" href="/thread/create">Threads</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 	</header>
-
 	{% for thread in threads %}
-		<a href="{{ path('app_home_details', {'id': thread.id}) }}">{{thread.title}}</a>
-	{% endfor %}
+		<div class="container">
+			<div class="example-wrapper">
 
 
+				<div class="card">
+					<h5 class="card-header">{{ thread.CreatedAt | date("m/d/y")}}</h5>
+					<div class="card-body">
+						<h5 class="card-title">
+							{{thread.title}}
+						</h5>
+						<p class="card-text">{{thread.description}}</p>
+						<a class="btn btn-primary" href="{{ path('app_home_details', {'id': thread.id}) }}">Show Details</a>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
 {% endblock %}

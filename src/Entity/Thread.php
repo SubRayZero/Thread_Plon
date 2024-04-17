@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ThreadRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,17 @@ class Thread
 
     #[ORM\Column(length: 100)]
     private ?string $status = null;
+
+    /**
+     * @var Collection<int, Category>
+     */
+    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'category')]
+    private Collection $category;
+
+    public function __construct()
+    {
+        $this->category = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -108,4 +121,35 @@ class Thread
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategory(): Collection
+    {
+        return $this->category;
+    }
+
+    public function addCategory(Category $category): static
+    {
+        if (!$this->category->contains($category)) {
+            $this->category->add($category);
+            $category->setCategoru($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): static
+    {
+        if ($this->category->removeElement($category)) {
+            // set the owning side to null (unless already changed)
+            if ($category->getCategoru() === $this) {
+                $category->setCategoru(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

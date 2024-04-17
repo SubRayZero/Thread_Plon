@@ -1,9 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register
+{% block title %}Profil
 {% endblock %}
 
 {% block body %}
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+	</style>
+
 	<header>
 		<nav class="navbar navbar-expand-lg bg-body-tertiary">
 			<div class="container-fluid">
@@ -15,17 +24,23 @@
 						<li class="nav-item">
 							<a class="nav-link" href="/home">Home</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 	</header>
-	<h1>New Thread</h1>
-		{{ form_start(threadForm) }}
-		{{ form_errors(threadForm.title) }}
-		{{ form_errors(threadForm.description) }}
-		{{ form_errors(threadForm.body) }}
-		<button type="submit" class="btn btn-primary">Validation</button>
-	{{ form_end(threadForm) }}
 
+	<div class="example-wrapper">
+		{% if app.user %}
+			<div class="mb-3">
+				Hello
+				{{ app.user.userIdentifier }},
+
+			</div>
+            
+		{% endif %}
+	</div>
 {% endblock %}

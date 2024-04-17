@@ -26,6 +26,9 @@ class Category
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+    #[ORM\ManyToOne(inversedBy: 'category')]
+    private ?Thread $categoru = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Category
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getCategoru(): ?Thread
+    {
+        return $this->categoru;
+    }
+
+    public function setCategoru(?Thread $categoru): static
+    {
+        $this->categoru = $categoru;
 
         return $this;
     }
