@@ -40,6 +40,12 @@ class Vote
         return $this;
     }
 
+    public function __toString()
+    {
+      return (string) $this->vote;
+    }
+  
+
     public function getUser(): ?User
     {
         return $this->user;

@@ -176,6 +176,9 @@ class ThreadController extends AbstractController
         $entityManager->persist($vote);
         $entityManager->flush();
 
-        return new Response('Le vote a été enregistré avec succès.', Response::HTTP_OK);
+        return $this->render('thread/details.html.twig', [
+            'controller_name' => 'ThreadController',
+            'vote' => $vote,
+        ]);
     }
 }

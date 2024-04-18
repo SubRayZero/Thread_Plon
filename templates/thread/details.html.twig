@@ -56,6 +56,49 @@
 		</div>
 	</div>
 
+	<div class="container">
+		<div class="example-wrapper">
+			{% if thread.voteId is not empty %}
+				<ul>
+					{% for vote in thread.voteId %}
+						<li>{{ vote }}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p>No vote</p>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="example-wrapper">
+			<h5>
+				Responses
+			</h5>
+			{% if thread.responseId is not empty %}
+				{% for response in thread.responseId %}
+					<div class="card mb-3">
+						<div class="card-body">
+							<blockquote class="blockquote mb-0">
+								<p>{{ response.body }}</p>
+							</blockquote>
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<div class="card">
+					<div class="card-header">
+						No responses
+					</div>
+					<div class="card-body">
+						<p>There are no responses to this thread yet.</p>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+
 	{{ form_start(form) }}
 	<div class="container">
 		<div class="example-wrapper">
