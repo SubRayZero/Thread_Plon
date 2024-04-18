@@ -38,11 +38,14 @@
 					</blockquote>
 				</div>
 			</div>
+			<form action="{{ path('app_thread_like', {'id': thread.id}) }}" method="POST">
+				<input type="hidden" name="vote" value="1">
+				<button type="submit" class="btn btn-primary">Like</button>
+			</form>
+
+
 		</div>
 	</div>
-
-
-
 
 	{{ form_start(form) }}
 	<div class="container">

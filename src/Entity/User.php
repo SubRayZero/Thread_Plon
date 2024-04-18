@@ -51,9 +51,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Thread::class, mappedBy: 'user')]
     private Collection $thread_id;
 
+    /**
+     * @var Collection<int, Vote>
+     */
+    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'user')]
+    private Collection $vote_id;
+
     public function __construct()
     {
         $this->thread_id = new ArrayCollection();
+        $this->vote_id = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,6 +198,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($threadId->getUser() === $this) {
                 $threadId->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Vote>
+     */
+    public function getVoteId(): Collection
+    {
+        return $this->vote_id;
+    }
+
+    public function addVoteId(Vote $voteId): static
+    {
+        if (!$this->vote_id->contains($voteId)) {
+            $this->vote_id->add($voteId);
+            $voteId->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoteId(Vote $voteId): static
+    {
+        if ($this->vote_id->removeElement($voteId)) {
+            // set the owning side to null (unless already changed)
+            if ($voteId->getUser() === $this) {
+                $voteId->setUser(null);
             }
         }
 

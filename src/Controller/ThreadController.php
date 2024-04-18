@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Thread;
+use App\Entity\Vote;
 use App\Entity\ResponseEntity;
 use App\Form\ResponseType;
 use App\Form\ThreadFormType;
@@ -13,9 +14,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Role\Role;
 
 class ThreadController extends AbstractController
 {
@@ -133,5 +136,37 @@ class ThreadController extends AbstractController
         return $this->render('profil/index.html.twig', [
             'threadsUser' => $threadsUser
         ]);
+    }
+
+    #[Route('/thread/{id}/like', name: 'app_thread_like', methods: ['POST'])]
+
+    #[Route('/thread/{id}/like', name: 'app_thread_like', methods: ['POST'])]
+    public function like($id, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return new Response(Response::HTTP_UNAUTHORIZED);
+        }
+
+        $threadRepository = $entityManager->getRepository(Thread::class);
+        $thread = $threadRepository->find($id);
+
+        $existingVote = $entityManager->getRepository(Vote::class)->findOneBy([
+            'user' => $user,
+            'thread' => $thread
+        ]);
+
+        if ($existingVote) {
+            return new Response(Response::HTTP_BAD_REQUEST);
+        }
+
+        $vote = new Vote();
+        $vote->setUser($user);
+        $vote->setThread($thread);
+        $vote->setVote(1);
+        $entityManager->persist($vote);
+        $entityManager->flush();
+
+        return new Response('Le vote a été enregistré avec succès.', Response::HTTP_OK);
     }
 }
