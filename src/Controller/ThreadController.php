@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,8 +100,9 @@ class ThreadController extends AbstractController
 
     #[Route('/home/{id}', name: 'app_home_details')]
 
-    public function threadHome($id, EntityManagerInterface $entityManager, Request $request)
+    public function threadHome($id, EntityManagerInterface $entityManager, Request $request, Security $security)
     {
+
         $threadRepository = $entityManager->getRepository(Thread::class);
         $thread = $threadRepository->find($id);
 
@@ -108,8 +110,17 @@ class ThreadController extends AbstractController
         $form = $this->createForm(ResponseType::class, $response);
 
         $form->handleRequest($request);
+
+        $user = $security->getUser();
+
+
         if ($form->isSubmitted() && $form->isValid()) {
             $response->setThread($thread);
+
+            if (!$user) {
+                return $this->redirectToRoute('app_login');
+            }
+
 
             $response->setCreatedAt(new DateTimeImmutable());
             $response->setUpdateAt(new DateTime());
@@ -123,7 +134,7 @@ class ThreadController extends AbstractController
         return $this->render('thread/details.html.twig', [
             'controller_name' => 'ThreadController',
             'thread' => $thread,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
     #[Route('/profil', name: 'app_profil_thread')]
@@ -139,13 +150,11 @@ class ThreadController extends AbstractController
     }
 
     #[Route('/thread/{id}/like', name: 'app_thread_like', methods: ['POST'])]
-
-    #[Route('/thread/{id}/like', name: 'app_thread_like', methods: ['POST'])]
     public function like($id, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         if (!$user) {
-            return new Response(Response::HTTP_UNAUTHORIZED);
+            return $this->redirectToRoute('app_login');
         }
 
         $threadRepository = $entityManager->getRepository(Thread::class);
