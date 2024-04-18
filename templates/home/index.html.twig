@@ -17,9 +17,20 @@
 						<li class="nav-item">
 							<a class="nav-link" href="/register">Register</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/login">LogIn</a>
-						</li>
+						{% if app.user %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_profil_thread') }}">Profil</a>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_login') }}">LogIn</a>
+							</li>
+						{% endif %}
+						{% if app.user %}
+							<li class="nav-item">
+								<a class="nav-link" href="/logout">Logout</a>
+							</li>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
