@@ -178,11 +178,14 @@ class ThreadController extends AbstractController
         $entityManager->persist($vote);
         $entityManager->flush();
 
-        return $this->render('thread/details.html.twig', [
-            'controller_name' => 'ThreadController',
-            'vote' => $vote,
-        ]);
+        $totalVotes = 0;
+        foreach ($thread->getVoteId() as $vote) {
+            $totalVotes += $vote->getVote();
+        }
+        return $this->redirectToRoute('app_home_details', ['id' => $id]);
+        return new JsonResponse(['totalVotes' => $totalVotes]);
     }
+
 
     #[Route('/thread/{id}/delete', name: 'app_thread_delete', methods: ['POST'])]
     public function deleteThread($id, EntityManagerInterface $entityManager): Response

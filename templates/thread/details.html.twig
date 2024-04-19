@@ -27,9 +27,6 @@
 								<a class="nav-link" href="{{ path('app_login') }}">LogIn</a>
 							</li>
 						{% endif %}
-						<li class="nav-item">
-							<a class="nav-link" href="/thread">Threads</a>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -59,16 +56,29 @@
 	<div class="container">
 		<div class="example-wrapper">
 			{% if thread.voteId is not empty %}
-				<ul>
-					{% for vote in thread.voteId %}
-						<li>{{ vote }}</li>
-					{% endfor %}
-				</ul>
+				<p id="total-votes">Total Votes:
+					{{ thread.voteId|length }}
+				</p>
 			{% else %}
 				<p>No vote</p>
 			{% endif %}
 		</div>
 	</div>
+
+	<script>
+		function likeThread(threadId) {
+fetch('/thread/' + threadId + '/like', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+'X-Requested-With': 'XMLHttpRequest'
+}
+}).then(response => response.json()).then(data => {
+document.getElementById('total-votes').textContent = 'Total Votes: ' + data.totalVotes;
+}).catch(error => console.error('Error:', error));
+}
+	</script>
+
 
 	<div class="container">
 		<div class="example-wrapper">
