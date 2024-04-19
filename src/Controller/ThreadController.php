@@ -43,6 +43,8 @@ class ThreadController extends AbstractController
             $createThread->setStatus('active');
             $entityManager->persist($createThread);
             $entityManager->flush();
+
+            return $this->redirectToRoute('app_profil_thread');
         }
 
         return $this->render('thread/create.html.twig', [
@@ -180,5 +182,22 @@ class ThreadController extends AbstractController
             'controller_name' => 'ThreadController',
             'vote' => $vote,
         ]);
+    }
+
+    #[Route('/thread/{id}/delete', name: 'app_thread_delete', methods: ['POST'])]
+    public function deleteThread($id, EntityManagerInterface $entityManager): Response
+    {
+        $threadRepository = $entityManager->getRepository(Thread::class);
+        $thread = $threadRepository->find($id);
+
+        $votes = $thread->getVoteId();
+        foreach ($votes as $vote) {
+            $entityManager->remove($vote);
+        }
+
+        $entityManager->remove($thread);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_profil_thread');
     }
 }
