@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Thread;
 use App\Entity\Vote;
 use App\Entity\ResponseEntity;
+use App\Entity\User;
 use App\Form\ResponseType;
 use App\Form\ThreadFormType;
 use DateTime;
@@ -202,5 +203,20 @@ class ThreadController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_profil_thread');
+    }
+
+    #[Route('/user/{id}/threads', name: 'app_user_threads')]
+    public function userThreads($id, EntityManagerInterface $entityManager): Response
+    {
+        $userRepository = $entityManager->getRepository(User::class);
+        $user = $userRepository->find($id);
+
+        $threadRepository = $entityManager->getRepository(Thread::class);
+        $threads = $threadRepository->findBy(['user' => $user]);
+
+        return $this->render('profil/user.html.twig', [
+            'user' => $user,
+            'threads' => $threads
+        ]);
     }
 }

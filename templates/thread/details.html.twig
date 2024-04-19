@@ -46,7 +46,8 @@
 				<div class="card-body">
 					{% if thread.user is not null %}
 						<p>Created by:
-							{{ thread.user.username }}</p>
+							<a href="{{ path('app_user_threads', {'id': thread.user.id}) }}">{{ thread.user.username }}</a>
+						</p>
 					{% else %}
 						<p>Created by: Unknown</p>
 					{% endif %}
