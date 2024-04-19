@@ -46,6 +46,12 @@
 							{{thread.title}}
 						</h5>
 						<p class="card-text">{{thread.description}}</p>
+						{% if thread.user is not null %}
+							<p>Created by:
+								{{ thread.user.username }}</p>
+						{% else %}
+							<p>Created by: Unknown</p>
+						{% endif %}
 						<a class="btn btn-primary" href="{{ path('app_home_details', {'id': thread.id}) }}">Show Details</a>
 					</div>
 				</div>

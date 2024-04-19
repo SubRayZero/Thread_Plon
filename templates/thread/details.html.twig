@@ -43,6 +43,14 @@
 						<p>{{thread.body}}</p>
 					</blockquote>
 				</div>
+				<div class="card-body">
+					{% if thread.user is not null %}
+						<p>Created by:
+							{{ thread.user.username }}</p>
+					{% else %}
+						<p>Created by: Unknown</p>
+					{% endif %}
+				</div>
 			</div>
 			<form action="{{ path('app_thread_like', {'id': thread.id}) }}" method="POST">
 				<input type="hidden" name="vote" value="1">
